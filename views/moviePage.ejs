@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Movie Page</title>
+	<script
+        src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+        crossorigin="anonymous">
+    </script>
+</head>
+<body>
+	<!-- Movie Image -->
+
+	<!-- Movie Details -->
+    <h1>Movie Id :<%= movieId %></h1>
+	<h1>Movie Title:<%= data.title %> </h1>
+	<p>Release Date: January 1, 2023</p>
+	<p>Director: Jane Smith</p>
+	<p>Starring: John Doe, Jane Doe, etc.</p>
+
+	<!-- Movie Rating -->
+	<p>Rating:</p>
+	<div class="stars">
+		<span class="star" id="star1">&#9733;</span>
+		<span class="star" id="star2">&#9733;</span>
+		<span class="star" id="star3">&#9733;</span>
+		<span class="star" id="star4">&#9733;</span>
+		<span class="star" id="star4.5">&#9733;</span>
+		<span class="star" id="star5">&#9733;</span>
+	</div>
+
+	<h2>Add comment: </h2>
+	<label for="name">Name:</label>
+	<input type="text" id="name" name="name">
+	<button id="commentButton">Submit</button>
+	<div id="result"></div>
+
+
+	<h2>Comments: </h2>
+	<% for(var i =0 ; i < data.comments.length ;i++){%>
+		<li><%= data.comments[i].text %></li>
+	 <%}%>
+	 <script src="/assets/moviePage.js"></script>
+</body>
+</html>

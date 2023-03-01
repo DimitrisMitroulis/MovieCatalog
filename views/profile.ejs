@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <link href = "/assets/styles.css" rel="stylesheet" type="text/css">
+        </head>
+        <body>
+            
+            <h1>NAME IS <%= person %></h1>
+            <p><strong>Age: </strong><%= data.age %></p>
+            <h2>Hobbies</h2>
+            <ul>
+            <% data.hobbie.forEach(function(item){%>
+                <li><%= item %></li>
+            <%});%>
+            </ul>
+        </body>
+    </html>
