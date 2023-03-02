@@ -29,10 +29,12 @@
 		<span class="star" id="star5">&#9733;</span>
 	</div>
 
+	<button id="favouritesButton">AddToFavourites</button>
+
 	<h2>Add comment: </h2>
 	<label for="name">Name:</label>
-	<input type="text" id="name" name="name">
-	<button id="commentButton">Submit</button>
+	<input  type="text" id="name" name="name">
+	<button  id="commentButton">Submit</button>
 	<div id="result"></div>
 
 
@@ -41,5 +43,6 @@
 		<li><%= data.comments[i].text %></li>
 	 <%}%>
 	 <script src="/assets/moviePage.js"></script>
+	
 </body>
 </html>

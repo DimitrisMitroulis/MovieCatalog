@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     let result = document.getElementById("result");
     $('#commentButton').on('click', function() {
@@ -8,10 +9,16 @@ $(document).ready(function() {
         if (comment.length <= 0) {
             result.innerHTML = `<h3 class="msg">Please Enter a comment</h3>`;
           }else{
+ 
+            // get the last part of the path
+            const parts = window.location.href.split("/");
+            const movieId = parts.pop();
+
             $.ajax({
                 url: '/addComment',
                 method: 'POST',
-                data:{  Name: "Name2",
+                data:{  movieId : movieId,
+                        Name: "Name2",
                         text: comment,
                         rating : 1,
                         PersonId: "asdasdasda"

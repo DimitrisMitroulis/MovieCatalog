@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Page</title>
+    <script
+        src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+        crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="./assets/styles.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div class="search-container">
+        <input
+          onkeyup="sendData(this)"
+          type="text"
+          placeholder="Enter movie name here..."
+          id="movie-name"
+          value="">
+        <button type="button"id="search-btn">Search</button>
+      </div>
+      <div id="result"></div>
+    </div>    
+    <% for(var i =0 ; i < res.movies.length ;i++){%>
+      <hr class="solid">
+      <div class="movie-block">
+        <div class="movie-info">
+          <h3 class="movie-title"><%= res.movies[i].title %></h3>
+          <p class="movie-description"><%= res.movies[i].plot %></p>
+          <p class="movie-rating">Rating: <%= res.movies[i].rating %>/10</p>
+          <p class="movie-rating">ID: <%= res.movies[i]._id %>/10</p>
+        </div>
+      </div>
+    <%}%>
+    <script src="/assets/searchPage.js"></script>
+    
+</body>
+</html>
