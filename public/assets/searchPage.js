@@ -1,10 +1,20 @@
 $(document).ready(function() {
 
     $('#movie-name').on('keydown', function(event) {
-        if (event.keyCode === 13) {
-            //event.stopImmediatePropagation();
-            const search = $('#movie-name').val();
-            sendData(search);
+        const search = $('#movie-name').val();
+        payload = sendData(search);
+        searchResults.innerHTML = '';
+        console.log(search);
+        if(payload.length < 1 ){
+            searchResults.innerHTML = '<p>Nothing Found</p>';
+            return;
+        }else{
+            payload.forEach((item,index)=>{
+                if(index>0) searchResults.innerHTML += '<hr>';
+                searchResults.innerHTML += `<p>${item.title}</p>`;
+            });
+            return;
+
         }
       });
 
@@ -17,12 +27,13 @@ $(document).ready(function() {
 
 function sendData(e){
     fetch('search',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({payload:e.value})
-      }).then(res => res.json()).then(data => {
-      let payload = data.payload;
-      console.log('payload: '+payload);
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({payload:e.value})
+        }).then(res => res.json()).then(data => {
+        return data.payload;
+      //console.log('payload: '+payload[0].title);
+
   })
   }
 
