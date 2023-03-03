@@ -8,6 +8,7 @@
         integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
         crossorigin="anonymous">
     </script>
+    <script type="text/javascript" src="/assets/searchPage.js"></script>
     <link rel="stylesheet" href="./assets/styles.css"/>
   </head>
   <body>
@@ -19,6 +20,8 @@
           placeholder="Enter movie name here..."
           id="movie-name"
           value="">
+          <section id = "searchResults">
+          </section>
         <button type="button"id="search-btn">Search</button>
   
       </div>
@@ -35,44 +38,7 @@
         </div>
       </div>
     <%}%>
-    <section id = "searchResults">
-    </section>
-    <script>
-      function sendData(e) {
-        fetch('/search',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({payload:e.value})
-          }).then(res => res.json()).then(data => {
-            let payload = data.payload;
-            searchResults.innerHTML = '';
-            if(payload.length < 1 ){
-                searchResults.innerHTML = '<p>Nothing Found</p>';
-                return;
-            }else{
-                payload.forEach((item,index)=>{
-                    if(index>0) searchResults.innerHTML += '<hr>';
-                    searchResults.innerHTML += `<p>${item.title}</p>`;
-                });
-                return;
-            }
-      })
-        
-    }
     
-    document.addEventListener("keydown", function(event) {
-      if (event.keyCode === 13) {
-        var e = document.getElementById("movie-name");
-
-        fetch(`/search?search=${e.value.toString()}`)
-        .then(response => {
-          if (response.ok) {
-            window.location.href = response.url;
-          }
-        })
-      }
-    });
-    </script>
-    
+    <main id="main"></main>
 </body>
 </html>

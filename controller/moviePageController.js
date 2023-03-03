@@ -4,11 +4,12 @@ var MovieSchema = require('../models/movieSchema');
 var profileSchema = require('../models/profileSchema');
 const url = require('url');
 const movieRoutes = require('../routes/search-movies');
+const { response } = require('express');
 
 
 module.exports = function(app){
     var urlencodedParser = bodyParser.urlencoded({extended:false});
-   
+    app.use("/api",movieRoutes)
 
     const uri = 'mongodb+srv://user1:user1@moviecatalog.vyyguoc.mongodb.net/TodoList?retryWrites=true&w=majority';
     mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true})
@@ -246,10 +247,14 @@ module.exports = function(app){
 
     app.post('/search', async function(req,res){
         try {
+
             let payload = req.body.payload.trim();
-            
             let search = await MovieSchema.find({ title: { $regex: new RegExp('^'+payload+'.*','i')}}).exec();
             search = search.slice(0,10);
+            const response = {
+                search : search
+                //apiSearch : dataResults
+            }
             res.send({payload: search});
                
             
@@ -258,7 +263,6 @@ module.exports = function(app){
         }
     });
 };  
-
 
 
 
@@ -277,4 +281,39 @@ function lastPart(req) {
     const parts = parsedUrl.pathname.split('/');
     return parts[parts.length - 1];
 
+}
+
+
+function showMovies(data){
+    main.innerHtml = '';
+    data.forEach(movie => {
+        const {title, poster_path, vote_average,overview} = movie;
+        const movieEl = document.createElement('div');
+        movieEl.classList.add('movie');
+        movieEl.innerHtml = `
+            <hr class="solid">
+            <div class="movie-block">
+                <div class="movie-info">
+                <img src="${IMG_URL+poster_path}" alt="${title}">
+                <h3 class="movie-title">${title}</h3>
+                <p class="movie-description">${overview}</p>
+                <p style = color:${getColor(vote_average)}; class="movie-rating">Rating: ${vote_average}/10</p>
+                <p class="movie-rating">ID: <%= res.movies[i]._id %>/10</p>
+                </div>
+            </div>`;
+        main.appendChild(movieEl)
+    })
+}
+
+
+function getColor(vote){
+    if(vote>=8){
+        return 'green';
+    
+    }else if(vote>=5){
+        return 'orange';
+
+    }else{
+        return 'red';
+    }
 }
