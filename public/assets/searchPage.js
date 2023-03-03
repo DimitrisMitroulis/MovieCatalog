@@ -1,21 +1,7 @@
 $(document).ready(function() {
 
     $('#movie-name').on('keydown', function(event) {
-        const search = $('#movie-name').val();
-        payload = sendData(search);
-        searchResults.innerHTML = '';
-        console.log(search);
-        if(payload.length < 1 ){
-            searchResults.innerHTML = '<p>Nothing Found</p>';
-            return;
-        }else{
-            payload.forEach((item,index)=>{
-                if(index>0) searchResults.innerHTML += '<hr>';
-                searchResults.innerHTML += `<p>${item.title}</p>`;
-            });
-            return;
-
-        }
+        
       });
 
     $('#search-btn').click(function(event) {
