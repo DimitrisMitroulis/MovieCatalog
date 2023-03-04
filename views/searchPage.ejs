@@ -14,31 +14,71 @@
   <body>
     <div class="container">
       <div class="search-container">
-        <input
-          onkeyup="sendData(this)"
-          type="text"
-          placeholder="Enter movie name here..."
+        <div class="search-bar">
+          <input onkeyup="sendData(this)" type="text" placeholder="Enter movie name here..." 
           id="movie-name"
           value="">
+          <button type="button" id="search-btn">Search</button>
+        </div>
+        
+          <div class="right">
+            <form id="search-form">
+              <label for="genre">Select Genre:</label>
+              <select id="genre" name="genre">
+                <option value="">All</option>
+                <option value="Action">Action</option>
+                <option value="Romance">Romance</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Drama">Drama</option>
+                <option value="Crime">Crime</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Sci-fi">Sci-fi</option>
+                <option value="Music">Music</option>
+                <option value="Family">Family</option>
+                <option value="Thriller">Thriller</option>
+
+              </select>
+
+              <label for="order-by">Order By:</label>
+              <select id="order-by" name="order-by">
+                <option value="title">Title</option>
+                <option value="year">Year</option>
+                <option value="director">Director</option>
+                <option value="rating">Rating</option>
+              </select>
+              <select id="ascdesc" name="ascdesc">
+                <option value="1">Ascending</option>
+                <option value="-1">Descending</option>
+              </select>
+              
+              <label>
+                <input id="playing-now" type="checkbox" name="playing-now" value="yes">
+                Playing Now
+              </label>
+              
+            </form>
+          </div>
           <section id = "searchResults">
           </section>
-        <button type="button"id="search-btn">Search</button>
-  
+
+
+
+
       </div>
-      <div id="result"></div>
-    </div>    
-    <% for(var i =0 ; i < res.movies.length ;i++){%>
-      <hr class="solid">
-      <div class="movie-block">
-        <div class="movie-info">
-          <h3 class="movie-title"><%= res.movies[i].title %></h3>
-          <p class="movie-description"><%= res.movies[i].plot %></p>
-          <p class="movie-rating">Rating: <%= res.movies[i].rating %>/10</p>
-          <p class="movie-rating">ID: <%= res.movies[i]._id %>/10</p>
+      </div>
+  
+      <div class="leftright">
+        <div id="result">
+          <main id="MYmovies"></main>
+          <main id="APImovies"></main>
+        </div>   
+        
         </div>
       </div>
-    <%}%>
-    
-    <main id="main"></main>
+
+      
+   
+   
+
 </body>
 </html>

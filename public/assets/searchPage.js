@@ -5,32 +5,62 @@ const SEARCH_URL =  BASE_URL + 'search/movie?'+ APIKEY;
 const IMG_URL = 'https://image.tmdb.org/t/p/w500'
 
 $(document).ready(function() {
-    //TMDB
-    
+
     const movieName = document.getElementById('movie-name');
+    const searchResults = document.getElementById('searchResults');
+
+    
+    window.onload = function() {
+        getMovies(DISCOVER_URL);
+      };
+      
+    
 
     //on enter press, send get request to the same page with search term
     document.addEventListener("keydown", function(event) {
         if (event.keyCode === 13) {
-          var e = document.getElementById("movie-name");
-          getMyMovies('http://localhost:7000/api/search?search='+movieName.value);  
-          //getMovies(SEARCH_URL+'&query='+movieName.value);
-         
+            const genre = document.querySelector("#genre").value;
+            const orderBy = document.querySelector("#order-by").value;
+            const AscDesc = document.querySelector("#ascdesc").value;
+            
+            const checkbox = document.getElementById("playing-now");
+            let value = checkbox.checked;
 
-        //   fetch(`/search?search=${e.value.toString()}`)
-        //   .then(response => {
-        //     if (response.ok) {
+            url = 'http://localhost:7000/api/search?search='+movieName.value 
+            url += '&genres='+genre;
+            url += '&sort='+orderBy;
+            url += '&ascdesc='+AscDesc;
+            url += '&playingNow='+value;
+
+
+           
+            if(movieName.value === ""){
+                getMyMovies(url);  
+                //getMovies(DISCOVER_URL);
+         
+            }else{
+
+
                 
-        //         //window.location.href = response.url;
-        //     }
-        //   })
-        }
+                getMyMovies(url);  
+                //getMovies(SEARCH_URL+'&query='+movieName.value);
+            
+                //var e = document.getElementById("movie-name");
+                //   fetch(`/search?search=${e.value.toString()}`)
+                //   .then(response => {
+                //     if (response.ok) {
+                        
+                //         //window.location.href = response.url;
+                //     }
+                //   })
+                }
+            }
       });
     
 
     function getMyMovies(url){
         fetch(url).then(res => res.json()).then(data => {
-            showMovies(data.movies)
+            showMyMovies(data.movies)
         })
     }
 
@@ -42,14 +72,14 @@ $(document).ready(function() {
 
     function showMovies(data){
        //get main elemet and clear it
-        const main = document.getElementById('main');
+        const main = document.getElementById('APImovies');
         main.innerHtml = '';
         main.textContent = '';
 
         //show every retrieved movie
         data.forEach(movie => {
             const {title, poster_path, vote_average,overview} = movie;
-            const movieEl = document.createElement('main');
+            const movieEl = document.createElement('APImovies');
             const html= `<hr class='solid'>
                 <div class='movie-block'>
                     <div class='movie-info'>
@@ -64,6 +94,33 @@ $(document).ready(function() {
             main.appendChild(movieEl);
         })
     }
+
+    function showMyMovies(data){
+        //get main elemet and clear it
+         const main = document.getElementById('MYmovies');
+         main.innerHtml = '';
+         main.textContent = '';
+ 
+         //show every retrieved movie
+         data.forEach(movie => {
+             const {title, poster_path, rating,plot} = movie;
+             const movieEl = document.createElement('MYmovies');
+             const html= `<hr class='solid'>
+                 <div class='movie-block'>
+                     <div class='movie-info'>
+                     <img src='${IMG_URL+poster_path}' alt='${title}'>
+                     <h3 class='movie-title'>${title}</h3>
+                     <p class='movie-description'>${plot}</p>
+                     <p style=color:${getColor(rating)} class='movie-rating'>Rating: ${rating}/10</p>
+                     </div>
+                 </div>`;
+ 
+             movieEl.innerHTML += html;
+             main.appendChild(movieEl);
+         })
+     }
+ 
+
 
     function getColor(vote){
         if(vote>=8){
@@ -99,5 +156,11 @@ function sendData(e) {
             return;
         }
   })
-    
+
+
+
+ 
 }
+
+
+    

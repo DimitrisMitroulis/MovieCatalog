@@ -4,10 +4,12 @@ const Movie = require("../models/movieSchema");
 router.get("/search", async (req, res) => {
 	try {
 		const page = parseInt(req.query.page) - 1 || 0;
-		const limit = parseInt(req.query.limit) || 5;
+		const limit = parseInt(req.query.limit) || 10;
 		const search = req.query.search || "";
-		let sort = req.query.sort || "rating";
-		let genre = req.query.genre || "All";
+		let genres = req.query.genres || "All";
+		
+		let sort = { [req.query.sort || "rating"] :  req.query.ascdesc || "1" };
+		let playingNow = { nowPlaying: req.query.playingNow || false};
 
 		const genreOptions = [
 			"Action",
@@ -22,27 +24,31 @@ router.get("/search", async (req, res) => {
 			"Family",
 		];
 
-		genre === "All"
-			? (genre = [...genreOptions])
-			: (genre = req.query.genre.split(","));
-		req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+		genres === "All"
+		// 	? (genres = [...genreOptions])
+		// 	: (genres = req.query.genres.split(","));
+		// req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
 
-		let sortBy = {};
-		if (sort[1]) {
-			sortBy[sort[0]] = sort[1];
-		} else {
-			sortBy[sort[0]] = "asc";
-		}
 
-		const movies = await Movie.find({ name: { $regex: search, $options: "i" } })
-			.where("genre")
-			.in([...genre])
-			.sort(sortBy)
+		
+		
+		// if (sort[1]) {
+		// 	sortBy[sort[0]] = sort[1];
+		// } else {
+		// 	sortBy[sort[0]] = "asc";
+		// }
+		console.log(playingNow);
+		
+		const movies = await Movie.find({ nowPlaying: req.query.playingNow || false , title: { $regex: new RegExp('^'+search+'.*','i')} })
+			//.where("genres")
+			//.in([...genres])
+			.sort(sort)
 			.skip(page * limit)
 			.limit(limit);
+		
 
 		const total = await Movie.countDocuments({
-			genre: { $in: [...genre] },
+			genres: { $in: [...genres] },
 			name: { $regex: search, $options: "i" },
 		});
 
