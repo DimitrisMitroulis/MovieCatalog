@@ -6,18 +6,17 @@ var profileSchema = require('../models/profileSchema');
 async function initialize(passport,getUserById){
     const authenticateUser = async (email,password,done) =>{
         //check email
-        console.log('no email');
-        await profileSchema.find({email: email})
+        await profileSchema.findOne({email: email})
             .exec()
-            .then(user2 => {
-                if (user2 == null){
+            .then(async user2 => {
+                if (!user2){
                     //wrong email
                     console.log('no email');
-                    return done(null,false,{message : 'No email'})
+                    return done(null, false, { message: 'No user with that email' })
                 }
                 try{
-
-                    profileSchema.findOne({$and:[{email: email},{password: password}]})
+                    console.log('email'+ email+ ' password: '+ password);
+                    await profileSchema.findOne({$and:[{email: email},{password: password}]})
                     .exec()
                     .then(user => {
                         if (!user){
@@ -25,37 +24,41 @@ async function initialize(passport,getUserById){
                             console.log('wrong pass');
                             console.log('here');
                             return done(null,false,{message : 'Wrong Pass'});
-                        }
-                        //everything good
-                        console.log('everything good');
-                        const userData  = {
-                            email : user.email,
-                            userId : user._id,
-                            username : user.username,
-                            userType : user.userType,
-                            dateCreated : user.dateCreated
+                        }else{
+                            //everything good
+                            console.log('everything good');
+                            const userData  = {
+                                email : user.email,
+                                userId : user._id,
+                                username : user.username,
+                                userType : user.userType,
+                                dateCreated : user.dateCreated
+                            }
+                            return done(null,user);
                         }
 
-                        return done(null,user);
+                       
                             })
                 
                 }catch(e){
-                    return done(null,false,{message : e});
+                    return done(e)
+
 
                 }
-
-});
+    });
+    
     }
     
-    passport.use(new localStrategy({usernameField: 'email' }, 
-    authenticateUser))
+    passport.use(new localStrategy({usernameField: 'email' }, authenticateUser))
     passport.serializeUser((user,done) => {
         console.log('serialize');
         done(null, user.id)
     })
-    passport.deserializeUser((id,done) => {
-       return done(null, getUserById(id))
-    }) 
+    passport.deserializeUser((id, done) => {
+        profileSchema.findById(id, (err, user) => {
+          done(err, user);
+        });
+      });
 }
 
 module.exports =  initialize

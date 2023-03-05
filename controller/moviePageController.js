@@ -26,12 +26,13 @@ const session = require('express-session');
 const passport = require('passport');
 
 module.exports = function(app){
-
     initializePassport(
         passport,
-        id => {
-            profileSchema.findById(id, (err, user) => {
-                return user;
+        async id => {
+            await profileSchema.findById( id, (err, user) => {
+                if(err){
+                    console.log(err);
+                }
             });
         }
     );
@@ -57,45 +58,6 @@ module.exports = function(app){
     .then((result) => app.listen(7000),
                     console.log('connected to db'))
     .catch((err) => console.error(err));
-
-    const posts = [
-        {
-            username: 'Kyle1',
-            title : 'Post1'
-        },
-        {
-            username : 'Jim',
-            title : 'Example'
-        }
-    ]
-
-
-    // app.post('/test',function(req,res){ 
-    //     //authenticate user
-    //     const username = req.body.username;
-    //     const user = {name : username}
-    //     const accTok = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    //     res.json({accessToken : accTok});
-
-    // });
-
-    // app.get('/posts', authenticateToken, (req, res) => {
-    //     res.json(posts.filter(post => post.username === req.user.name))
-    //   })
-      
-    //   function authenticateToken(req, res, next) {
-    //     const authHeader = req.headers['authorization']
-    //     const token = authHeader && authHeader.split(' ')[1]
-    //     if (token == null) return res.sendStatus(401)
-      
-    //     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    //       console.log(err)
-    //       if (err) return res.sendStatus(403)
-    //       req.user = user
-    //       next()
-    //     })
-    //   }
-
 
 
 
@@ -343,11 +305,11 @@ module.exports = function(app){
     });
 
     
-    app.get("/signup",  (req, res) => {
+    app.get("/signup", checkNotAuthenticated, (req, res) => {
         res.render('signup');
     });
 
-    app.post("/signup", async (req, res) => {
+    app.post("/signup", checkNotAuthenticated, async (req, res) => {
         try{
             //const hashedPass = await bcrypt.hash(req.body.password, 10);
             const member = new profileSchema({
@@ -370,48 +332,40 @@ module.exports = function(app){
         }
     });
 
-    app.post('/test', checkAuth, (req, res) => {
-        res.status(200).json(res.userData);
 
-    });
-    function checkAuth(req, res, next) {
-        try{
-            var authHeader = req.headers.authorization;
-            const token = authHeader && authHeader.split(' ')[1]
-
-            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-            res.userData = decoded;
-            next();
-          }catch(e){
-            return res.status(401).json({
-                message: "Auth failed "+e
-            });
-          }
-    }
-
-
-    app.get("/login",  (req, res) => {
+    app.get("/login", checkNotAuthenticated, (req, res) => {
         res.render('login');
     });
     
-    app.post("/login", passport.authenticate('local',{
-        successredirect: '/profile',
+    app.post("/login",checkNotAuthenticated,passport.authenticate('local', {
+        successRedirect: '/profile',
         failureRedirect: '/error-page',
         failureFlash: true
-    }));
+      }))
    
 
+    app.get("/profile", checkAuthenticated, (req, res) => {
+        console.log('profile: '+ req.user.id);
 
-    
-
-
-    app.get("/profile",  (req, res) => {
-        console.log('profile: '+ req.user.name);
-
-        res.render('profile', {user: req.user.name});
+        res.render('profile', {user: req.user});
     });
 
 
+
+    function checkAuthenticated(req, res, next) {
+        if(req.isAuthenticated()){
+            return next()
+        }
+        res.redirect('/login');
+    }
+
+    function checkNotAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return res.redirect('/search')
+    }
+    next()
+    }
+    
 };  
 
 
