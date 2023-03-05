@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-    <html>
-        <head>
-            <link href = "/assets/styles.css" rel="stylesheet" type="text/css">
-        </head>
-        <body>
-            
-            <h1>NAME IS <%= person %></h1>
-            <p><strong>Age: </strong><%= data.age %></p>
-            <h2>Hobbies</h2>
-            <ul>
-            <% data.hobbie.forEach(function(item){%>
-                <li><%= item %></li>
-            <%});%>
-            </ul>
-        </body>
-    </html>
+<html>
+  <head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="./assets/profile-styles.css"/>
+
+  </head>
+  
+  <body>
+    <div class="container">
+      <h1>User Profile</h1>
+      <p><%= user %></p>
+      <div class="profile-info">
+        <span>Email:</span>
+        <span>Username:</span>
+        <p>exampleuser</p>
+      </div>
+    </div>
+  </body>
+</html>

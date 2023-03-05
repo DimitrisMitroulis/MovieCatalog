@@ -1,8 +1,11 @@
 const APIKEY = 'api_key=132908b07cbc33575b9983cfc84f9178';
 const BASE_URL = 'https://api.themoviedb.org/3/';
 const DISCOVER_URL = BASE_URL + 'discover/movie?sort_by=popularity.desc&'+ APIKEY;
-const SEARCH_URL =  BASE_URL + 'search/movie?'+ APIKEY;
+var SEARCH_URL =  BASE_URL + 'search/movie?'+ APIKEY;
 const IMG_URL = 'https://image.tmdb.org/t/p/w500'
+const NOW_PLAYING_URL = BASE_URL+'movie/now_playing?'+ APIKEY;
+
+var TMDB_URL;
 
 $(document).ready(function() {
 
@@ -19,31 +22,44 @@ $(document).ready(function() {
     //on enter press, send get request to the same page with search term
     document.addEventListener("keydown", function(event) {
         if (event.keyCode === 13) {
-            const genre = document.querySelector("#genre").value;
-            const orderBy = document.querySelector("#order-by").value;
-            const AscDesc = document.querySelector("#ascdesc").value;
+            var genre = document.querySelector("#genre").value;
+            var orderBy = document.querySelector("#order-by").value;
+            var AscDesc = document.querySelector("#ascdesc").value;
+            var playingStatus = document.querySelector("#playingStatus").value;
             
-            const checkbox = document.getElementById("playing-now");
-            let value = checkbox.checked;
 
-            url = 'http://localhost:7000/api/search?search='+movieName.value 
-            url += '&genres='+genre;
-            url += '&sort='+orderBy;
-            url += '&ascdesc='+AscDesc;
-            url += '&playingNow='+value;
+            var MyUrl = 'http://localhost:7000/api/search?search='+movieName.value;
+            MyUrl += '&genres='+genre;
+            MyUrl += '&sort='+orderBy;
+            MyUrl += '&ascdesc='+AscDesc;
+            MyUrl += '&playingNow='+playingStatus;
 
 
+            SEARCH_URL += '&query='+movieName.value;
+            
+            (playingStatus == "true")
+                ? TMDB_URL = NOW_PLAYING_URL
+                : TMDB_URL = SEARCH_URL;
+
+            
+
+            //set asc desc option according to field
+            // var discover = BASE_URL+ 'discover/movie?sort_by='
+            // +(order)
+            // +'.'
+            // +(AscDesc === "-1") ?'desc' : 'asc'
            
             if(movieName.value === ""){
-                getMyMovies(url);  
-                //getMovies(DISCOVER_URL);
+                getMyMovies(MyUrl);  
+                getMovies(DISCOVER_URL);
          
             }else{
 
-
+                getMyMovies(MyUrl);  
+                getMovies(TMDB_URL);
                 
-                getMyMovies(url);  
-                //getMovies(SEARCH_URL+'&query='+movieName.value);
+                
+                //getMovies(SEARCH_URL);
             
                 //var e = document.getElementById("movie-name");
                 //   fetch(`/search?search=${e.value.toString()}`)
@@ -76,8 +92,14 @@ $(document).ready(function() {
         main.innerHtml = '';
         main.textContent = '';
 
+        
+
+        
+        //filter movies based from search term
+        var res = data.filter(movie => movie.title.toLowerCase().includes(movieName.value.toLowerCase()));
+       
         //show every retrieved movie
-        data.forEach(movie => {
+        res.forEach(movie => {
             const {title, poster_path, vote_average,overview} = movie;
             const movieEl = document.createElement('APImovies');
             const html= `<hr class='solid'>
@@ -103,7 +125,7 @@ $(document).ready(function() {
  
          //show every retrieved movie
          data.forEach(movie => {
-             const {title, poster_path, rating,plot} = movie;
+            const {title, poster_path, rating,plot} = movie;
              const movieEl = document.createElement('MYmovies');
              const html= `<hr class='solid'>
                  <div class='movie-block'>

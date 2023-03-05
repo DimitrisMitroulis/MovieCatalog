@@ -5,9 +5,50 @@ var profileSchema = require('../models/profileSchema');
 const url = require('url');
 const movieRoutes = require('../routes/search-movies');
 const { response } = require('express');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
+const cr = require('crypto');
+const router = require('../routes/search-movies');
+var express = require('express');
+const route = express.Router();
+
+const initializePassport = require('./passport-config');
+
+const bcrypt = require('bcrypt');
+//console.log(cr.randomBytes(64).toString('hex'));
+//console.log(cr.randomBytes(64).toString('hex'));
+
+
+
+const flash = require('express-flash');
+const session = require('express-session');
+const passport = require('passport');
 
 module.exports = function(app){
+
+    initializePassport(
+        passport,
+        id => {
+            profileSchema.findById(id, (err, user) => {
+                return user;
+            });
+        }
+    );
+
+
+    app.use(flash())
+    app.use(session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false
+    }))
+    app.use(passport.initialize())
+    app.use(passport.session())
+
+
+
+
     var urlencodedParser = bodyParser.urlencoded({extended:false});
     app.use("/api",movieRoutes)
 
@@ -16,6 +57,45 @@ module.exports = function(app){
     .then((result) => app.listen(7000),
                     console.log('connected to db'))
     .catch((err) => console.error(err));
+
+    const posts = [
+        {
+            username: 'Kyle1',
+            title : 'Post1'
+        },
+        {
+            username : 'Jim',
+            title : 'Example'
+        }
+    ]
+
+
+    // app.post('/test',function(req,res){ 
+    //     //authenticate user
+    //     const username = req.body.username;
+    //     const user = {name : username}
+    //     const accTok = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+    //     res.json({accessToken : accTok});
+
+    // });
+
+    // app.get('/posts', authenticateToken, (req, res) => {
+    //     res.json(posts.filter(post => post.username === req.user.name))
+    //   })
+      
+    //   function authenticateToken(req, res, next) {
+    //     const authHeader = req.headers['authorization']
+    //     const token = authHeader && authHeader.split(' ')[1]
+    //     if (token == null) return res.sendStatus(401)
+      
+    //     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    //       console.log(err)
+    //       if (err) return res.sendStatus(403)
+    //       req.user = user
+    //       next()
+    //     })
+    //   }
+
 
 
 
@@ -107,10 +187,9 @@ module.exports = function(app){
 
     app.get('/add-person/',function(req,res){
         const member = new profileSchema({
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'johndoe@example.com',
-            username: 'johndoe',
+            username: 'mychem',  
+            email: 'mychem@example.com',
+            password: '123',
             favourites:[
                         {
                             movieID: "1231askdn",
@@ -118,8 +197,8 @@ module.exports = function(app){
                         {
                             movieID: "asdaasd",
                         }],
-            UserType: 'Admin'
-        });     
+            UserType: 'User'
+        });
         
 
         var schema = profileSchema(member).save(function(err,data){
@@ -177,7 +256,7 @@ module.exports = function(app){
         
     });
 
-    app.get(('/error-page'),function(req,res){
+    app.get('/error-page',function(req,res){
         res.render('error-page');
 
     });
@@ -262,9 +341,83 @@ module.exports = function(app){
             res.status(500).json({ error: true, message: "Internal Server Error" });
         }
     });
+
+    
+    app.get("/signup",  (req, res) => {
+        res.render('signup');
+    });
+
+    app.post("/signup", async (req, res) => {
+        try{
+            //const hashedPass = await bcrypt.hash(req.body.password, 10);
+            const member = new profileSchema({
+                username: req.body.username,  
+                email: req.body.email,
+                password: req.body.password,
+                UserType: 'User'
+            });
+    
+            profileSchema(member).save(function(err,data){
+                if (err) {
+                    res.render('error-page',{st: err});
+                    throw err;
+                }
+                res.redirect('/login');
+
+            });
+        } catch(e){
+
+        }
+    });
+
+    app.post('/test', checkAuth, (req, res) => {
+        res.status(200).json(res.userData);
+
+    });
+    function checkAuth(req, res, next) {
+        try{
+            var authHeader = req.headers.authorization;
+            const token = authHeader && authHeader.split(' ')[1]
+
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+            res.userData = decoded;
+            next();
+          }catch(e){
+            return res.status(401).json({
+                message: "Auth failed "+e
+            });
+          }
+    }
+
+
+    app.get("/login",  (req, res) => {
+        res.render('login');
+    });
+    
+    app.post("/login", passport.authenticate('local',{
+        successredirect: '/profile',
+        failureRedirect: '/error-page',
+        failureFlash: true
+    }));
+   
+
+
+    
+
+
+    app.get("/profile",  (req, res) => {
+        console.log('profile: '+ req.user.name);
+
+        res.render('profile', {user: req.user.name});
+    });
+
+
 };  
 
 
+    
+   
+    
 
 
 

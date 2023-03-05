@@ -4,23 +4,22 @@ var mongoose = require('mongoose');
 
 var profileSchema = new mongoose.Schema({
 
-    firstName: {
+    username: {
         type: String,
-        required: true
+        required: false
       },
       lastName: {
         type: String,
-        required: true
+        required: false
       },
       email: {
         type: String,
         required: true,
         unique: false
       },
-      username: {
+      password: {
         type: String,
         required: true,
-        unique: false
       },
       dateCreated: {
         type: Date,
@@ -46,10 +45,9 @@ var profileSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Members', profileSchema);
 const member = new Person({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@example.com',
-    username: 'johndoe',
+    username: 'mychem',  
+    email: 'mychem@example.com',
+    password: '123',
     favourites:[
                 {
                     movieID: "1231askdn",
@@ -57,7 +55,7 @@ const member = new Person({
                 {
                     movieID: "asdaasd",
                 }],
-    UserType: 'Admin'
+    UserType: 'User'
 });
 
 // name of table, schema name

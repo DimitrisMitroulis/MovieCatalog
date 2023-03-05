@@ -51,10 +51,13 @@
                 <option value="-1">Descending</option>
               </select>
               
-              <label>
-                <input id="playing-now" type="checkbox" name="playing-now" value="yes">
-                Playing Now
-              </label>
+              <label for="playingStatus">Playing Status:</label>
+              <select id="playingStatus" name="playingStatus">
+                <option value="all">All</option>
+                <option value="true">Playing Now</option>
+                <option value="false">Available for streaming</option>
+              </select>
+
               
             </form>
           </div>

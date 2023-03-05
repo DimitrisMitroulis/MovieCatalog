@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 //listen to port
+app.use(express.json());
 
 
 

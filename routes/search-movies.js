@@ -9,7 +9,7 @@ router.get("/search", async (req, res) => {
 		let genres = req.query.genres || "All";
 		
 		let sort = { [req.query.sort || "rating"] :  req.query.ascdesc || "1" };
-		let playingNow = { nowPlaying: req.query.playingNow || false};
+		let playingNow = req.query.playingNow || false
 
 		const genreOptions = [
 			"Action",
@@ -37,9 +37,18 @@ router.get("/search", async (req, res) => {
 		// } else {
 		// 	sortBy[sort[0]] = "asc";
 		// }
-		console.log(playingNow);
+		var searchJson = { 
+			title: { $regex: new RegExp('^'+search+'.*','i')} 
+		}
+
+		if(playingNow !== "all"){
+			searchJson.nowPlaying = playingNow
+			//nowPlaying: 
+		}
+			
 		
-		const movies = await Movie.find({ nowPlaying: req.query.playingNow || false , title: { $regex: new RegExp('^'+search+'.*','i')} })
+	
+		const movies = await Movie.find(searchJson)
 			//.where("genres")
 			//.in([...genres])
 			.sort(sort)
