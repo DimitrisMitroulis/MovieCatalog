@@ -25,6 +25,7 @@ const flash = require('express-flash');
 const session = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
+const movieSchema = require('../models/movieSchema');
 
 module.exports = function(app){
     initializePassport(
@@ -78,7 +79,7 @@ module.exports = function(app){
             }).catch((error) => {
                 var error = new Error('Resource not found');
                 error.status = 404;
-                res.render('error-page');    
+                res.render('error-page',{st:error});    
                 // Pass the error to the next function
                 console.log(error);      
                 
@@ -189,29 +190,6 @@ module.exports = function(app){
 
     });
 
-    app.post('/addComment',function(req,res){
-        //req.get('referer')
-        MovieSchema.updateOne({ _id:req.body.movieId },{$push:{comments:{
-            "Name": req.body.Name,
-            "text": req.body.text,
-            "rating" : req.body.rating1,
-            "PersonId": req.body.PersonId
-            }}}
-            , { new: true }
-            , function (err, docs) {
-                if (err){
-                    console.log(err)
-                }
-                else{
-                    //res.render('add-comment',{st:docs});
-                    res.redirect(req.get('referer'));
-                }
-        });
-
-        
-        
-        
-    });
 
     app.get('/error-page',function(req,res){
         res.render('error-page');
@@ -354,7 +332,7 @@ module.exports = function(app){
 
     function checkNotAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        return res.redirect('/search')
+        return res.redirect('/profile')
     }
     next()
     }
@@ -415,7 +393,7 @@ module.exports = function(app){
 
     });
 
-    app.post('/delete-movie',(req, res) => {
+    app.post('/delete-movie',checkAuthenticated,(req, res) => {
         var id = req.body.movie_id;
         MovieSchema.findByIdAndDelete(id, (err, doc) => {
             if (err) {
@@ -429,8 +407,73 @@ module.exports = function(app){
 
     });
 
-};  
 
+    app.get('/create-movie',checkAuthenticated,(req, res) => {
+        res.render('create-movie');
+    });
+
+    app.post('/create-movie',(req, res) => {
+        //var id = req.body.movie_id;
+        var nowPlaying = (req.body.nowPlaying)? true:false;
+        var actors = req.body.actors
+        //console.log(req.body.genre);
+        //console.log(req.body.genre);
+
+        const m = new movieSchema({
+            title : req.body.title,
+            year : req.body.year,
+            genres : req.body.genre,
+            director : req.body.director,
+            actors : actors.split(','),
+            plot : req.body.plot,
+            poster : 'anotherimage.jpg',
+            rating : req.body.rating,
+            trailer : req.body.trailer,
+            nowPlaying: nowPlaying
+        });
+
+        try{
+            movieSchema(m).save(function(err,data){
+                if (err) {
+                    res.render('error-page',{st:e});
+                    
+                }
+                res.redirect('/profile');
+            });
+
+     
+        }catch(e){
+            res.render('error-page',{st:e});
+        }
+    
+    
+    
+    });
+
+    app.post('/addComment',checkAuthenticated,function(req,res){
+        
+        MovieSchema.updateOne({ _id:req.body.movie_id },{$push:{comments:{
+            "Name": req.user.name,
+            "text": req.body.text,
+            "rating" : req.body.rating1,
+            "PersonId": req.user.id
+            }}}
+            , { new: true }
+            , function (err, docs) {
+                if (err){
+                    console.log(err)
+                }
+                res.redirect('/movie/'+req.body.movie_id);
+        });
+
+        
+        
+        
+    });
+
+    
+
+}
 
 
 //returns if movie is in person's favourite List

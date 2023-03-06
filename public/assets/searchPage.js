@@ -12,8 +12,24 @@ $(document).ready(function() {
     const movieName = document.getElementById('movie-name');
     const searchResults = document.getElementById('searchResults');
 
+    var genre = document.querySelector("#genre").value;
+    var orderBy = document.querySelector("#order-by").value;
+    var AscDesc = document.querySelector("#ascdesc").value;
+    var playingStatus = document.querySelector("#playingStatus").value;
+            
+
+
+    var MyUrl = 'http://localhost:7000/api/search?search='+movieName.value;
+            MyUrl += '&genres='+genre;
+            MyUrl += '&sort='+orderBy;
+            MyUrl += '&ascdesc='+AscDesc;
+            MyUrl += '&playingNow='+playingStatus;
+
+
+   
     
     window.onload = function() {
+        getMyMovies(MyUrl);
         getMovies(DISCOVER_URL);
       };
       
@@ -22,13 +38,13 @@ $(document).ready(function() {
     //on enter press, send get request to the same page with search term
     document.addEventListener("keydown", function(event) {
         if (event.keyCode === 13) {
-            var genre = document.querySelector("#genre").value;
-            var orderBy = document.querySelector("#order-by").value;
-            var AscDesc = document.querySelector("#ascdesc").value;
-            var playingStatus = document.querySelector("#playingStatus").value;
+            genre = document.querySelector("#genre").value;
+            orderBy = document.querySelector("#order-by").value;
+            AscDesc = document.querySelector("#ascdesc").value;
+            playingStatus = document.querySelector("#playingStatus").value;
             
 
-            var MyUrl = 'http://localhost:7000/api/search?search='+movieName.value;
+            MyUrl = 'http://localhost:7000/api/search?search='+movieName.value;
             MyUrl += '&genres='+genre;
             MyUrl += '&sort='+orderBy;
             MyUrl += '&ascdesc='+AscDesc;
@@ -42,7 +58,6 @@ $(document).ready(function() {
                 : TMDB_URL = SEARCH_URL;
 
             
-
             //set asc desc option according to field
             // var discover = BASE_URL+ 'discover/movie?sort_by='
             // +(order)
@@ -92,21 +107,18 @@ $(document).ready(function() {
         main.innerHtml = '';
         main.textContent = '';
 
-        
-
-        
         //filter movies based from search term
         var res = data.filter(movie => movie.title.toLowerCase().includes(movieName.value.toLowerCase()));
-       
+
         //show every retrieved movie
         res.forEach(movie => {
-            const {title, poster_path, vote_average,overview} = movie;
+            const {title, poster_path, vote_average,overview,_id} = movie;
             const movieEl = document.createElement('APImovies');
             const html= `<hr class='solid'>
                 <div class='movie-block'>
                     <div class='movie-info'>
                     <img src='${IMG_URL+poster_path}' alt='${title}'>
-                    <h3 class='movie-title'>${title}</h3>
+                    <h3 id="${_id}" class='movie-title'>${title}</h3>
                     <p class='movie-description'>${overview}</p>
                     <p style=color:${getColor(vote_average)} class='movie-rating'>Rating: ${vote_average}/10</p>
                     </div>
@@ -114,9 +126,10 @@ $(document).ready(function() {
 
             movieEl.innerHTML += html;
             main.appendChild(movieEl);
+
         })
     }
-
+    
     function showMyMovies(data){
         //get main elemet and clear it
          const main = document.getElementById('MYmovies');
@@ -125,20 +138,24 @@ $(document).ready(function() {
  
          //show every retrieved movie
          data.forEach(movie => {
-            const {title, poster_path, rating,plot} = movie;
+            const {title, poster_path, rating,plot,_id} = movie;
              const movieEl = document.createElement('MYmovies');
              const html= `<hr class='solid'>
                  <div class='movie-block'>
-                     <div class='movie-info'>
-                     <img src='${IMG_URL+poster_path}' alt='${title}'>
-                     <h3 class='movie-title'>${title}</h3>
-                     <p class='movie-description'>${plot}</p>
-                     <p style=color:${getColor(rating)} class='movie-rating'>Rating: ${rating}/10</p>
-                     </div>
+                    <div class='movie-info'>
+                    <img src='${IMG_URL+poster_path}' alt='${title}'>
+                    <h3 id="${_id}" class='movie-title'>${title}</h3>
+                    <p class='movie-description'>${plot}</p>
+                    <p style=color:${getColor(rating)} class='movie-rating'>Rating: ${rating}/10</p>
+                    </div>
                  </div>`;
  
-             movieEl.innerHTML += html;
-             main.appendChild(movieEl);
+            movieEl.innerHTML += html;
+            main.appendChild(movieEl);
+            var myHeading = document.getElementById(_id);
+            myHeading.onclick = function() {
+                window.location.href = '/movie/'+_id;
+              };
          })
      }
  
@@ -159,30 +176,29 @@ $(document).ready(function() {
 
 //on button press update dropdown list
 function sendData(e) {
-    fetch('/search',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({payload:e.value})
-      }).then(res => res.json()).then(data => {
-        //fetch results from database
-        let payload = data.payload;
-        searchResults.innerHTML = '';
-        if(payload.length < 1 ){
-            searchResults.innerHTML = '<p>Nothing Found</p>';
-            return;
-        }else{
-            payload.forEach((item,index)=>{
-                if(index>0) searchResults.innerHTML += '<hr>';
-                searchResults.innerHTML += `<p>${item.title}</p>`;
-            });
-            return;
-        }
-  })
-
-
-
- 
+    //showAutocomplete(e);
 }
 
 
+function showAutocomplete(e){
+    fetch('/search',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({payload:e.value})
+        }).then(res => res.json()).then(data => {
+          //fetch results from database
+          let payload = data.payload;
+          searchResults.innerHTML = '';
+          if(payload.length < 1 ){
+              searchResults.innerHTML = '<p>Nothing Found</p>';
+              return;
+          }else{
+              payload.forEach((item,index)=>{
+                  if(index>0) searchResults.innerHTML += '<hr>';
+                  searchResults.innerHTML += `<p>${item.title}</p>`;
+              });
+              return;
+          }
+    })
+}
     
