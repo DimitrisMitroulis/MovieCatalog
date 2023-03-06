@@ -46,35 +46,33 @@
 					<h3 class="link">Trailer</h3>
 				</a>
 				<% if(data.nowPlaying) {%>
-					<p>Now playing</p>
+					<h2>Now playing</h2>
 				<% } %>
 				
-			</div>
-			<!-- Movie Rating -->
-			
+			</div>			
 		</div>	
 	</div>
 	
+	<button id="favButton">Add to Favorites</button>
 
-	<!-- <button id="favouritesButton">AddToFavourites</button> -->
 	<form action="/addComment" method="POST">
-		<div id="comments" style="padding: 20px;">
+		<div class="comments">
 			<h2>Add comment: </h2>
+			
 			<label for="name">Name:</label>
 			<input id="movie_id" type="hidden" name="movie_id" value=<%=movieId %>> 
 			<input required pattern=".{1,}" type="text" id="name" name="text">
 			<button  id="commentButton" type="submit">Submit</button>
 			<div id="result"></div>
+			<div class="comment-list"></div>
+				<h2>Comments: </h2>
+				<% for(var i =0 ; i < data.comments.length ;i++){%>
+					<li><%= data.comments[i].text %></li>
+				<%}%>
+			</div>
 		</div>
 	</form>
-
-
-
-	<h2>Comments: </h2>
-	<% for(var i =0 ; i < data.comments.length ;i++){%>
-		<li><%= data.comments[i].text %></li>
-	 <%}%>
-	 <script src="/assets/moviePage.js"></script>
+<script src="/assets/moviePage.js"></script>
 	
 </body>
 </html>

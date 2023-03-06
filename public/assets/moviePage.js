@@ -1,5 +1,47 @@
+$(document).ready(function() {
+    var movie_id = document.getElementById("movie_id");
 
-// $(document).ready(function() {
+    window.onload = function() {
+        isFavourite(movie_id);
+
+        
+    };
+    var favButton = document.getElementById("favButton");
+    favButton.addEventListener("click", myFunction);
+
+}); 
+
+
+function isFavourite(movie_id){
+    fetch('http://localhost:7000/isFavourite?mov_id='+movie_id.value).then(res => res.json()).then(data => {
+        console.log(data);
+
+        
+    });
+}
+
+
+function myFunction(){
+    //var favButton = document.getElementById("favButton");
+
+    changeButtonText()
+
+
+
+}
+
+
+function changeButtonText(){
+    var favButton = document.getElementById("favButton");
+    if(favButton.innerHTML === "Add to Favorites"){
+        favButton.innerHTML = "Remove from Favourites";
+    }else {
+        favButton.innerHTML = "Add to Favorites";
+    }
+}
+
+
+// 
 //     let result = document.getElementById("result");
 
     
@@ -38,4 +80,4 @@
 //             }
 //     });
     
-// });
+// 

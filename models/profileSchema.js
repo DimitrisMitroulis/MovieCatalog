@@ -25,18 +25,7 @@ var profileSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       },
-      favourites: [
-        {
-            movieID: {
-                type:String,
-                required : true
-            },
-            dateCreated: {
-                type: Date,
-                default: Date.now
-            }
-        }
-      ],
+      favourites: Array,
       UserType:{
         type: String,
         required: true
@@ -48,13 +37,9 @@ const member = new Person({
     username: 'mychem',  
     email: 'mychem@example.com',
     password: '123',
-    favourites:[
-                {
-                    movieID: "1231askdn",
-                },
-                {
-                    movieID: "asdaasd",
-                }],
+    favourites: [      
+          "asdasd"
+                ],
     UserType: 'User'
 });
 

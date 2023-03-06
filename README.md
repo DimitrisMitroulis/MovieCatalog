@@ -1,4 +1,6 @@
 ## Simple movie catalog project
+### Frontend needs much more work, but it has some good functionalities
+
 ### Featues:
 - Data stored in mongo db
 - Can prefrom search in movies based on filters, search query

@@ -65,8 +65,6 @@ module.exports = function(app){
 
 
     app.get('/movie/:id', function(req,res){ 
-                
-        console.log(req.params.id);
         MovieSchema.findById(req.params.id).then((movie) => {
                 if(!movie){
                     console.log('movie not found');
@@ -74,7 +72,7 @@ module.exports = function(app){
                     
                 }
                 
-                res.render('moviePage',{movieId:req.params.id, data:movie });
+                res.render('moviePage',{movieId:req.params.id, data:movie});
             
             }).catch((error) => {
                 var error = new Error('Resource not found');
@@ -148,13 +146,9 @@ module.exports = function(app){
             username: 'mychem',  
             email: 'mychem@example.com',
             password: '123',
-            favourites:[
-                        {
-                            movieID: "1231askdn",
-                        },
-                        {
-                            movieID: "asdaasd",
-                        }],
+            favourites: [      
+                  "asdasd"
+                        ],
             UserType: 'User'
         });
         
@@ -318,7 +312,7 @@ module.exports = function(app){
    
 
     app.get("/profile", checkAuthenticated, (req, res) => {
-        console.log('profile: '+ req.user.id);
+        //console.log('profile: '+ req.user.id);
 
         res.render('profile', {user: req.user});
     });
@@ -471,7 +465,47 @@ module.exports = function(app){
         
     });
 
+    app.get('/changeFavStatus',checkAuthenticated,function(req,res){
+        console.log(req.params.movie_id);
+        console.log(req.params.movie_id);
+
+        
+        Entry.findOne({_id: req.user.id ,favorites: { $in: [req.params.movie_id] }}, (err, entry) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log(entry); 
+          });
+        
+        res.status(200).json(err);
+    });
+
+
+    app.get('/isFavourite',function(req,res){
+        console.log(req.params.mov_id);
+        if(req.isAuthenticated()){
+            console.log(req.user.id);
+            
+
+
+
+            profileSchema.findOne({_id: req.user.id ,favorites: { $in: [req.params.mov_id] }}, (err, entry) => {
+                if (err) {
+                console.error(err);
+                return;
+                }
+                res.status(200).json(entry);
+
+            });
+
+        }else{
+            res.status(200).json({authenticated: false});
+            
+        }
     
+        
+    });
 
 }
 
