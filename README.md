@@ -11,5 +11,6 @@
 ## Installation:
 1. Install nodejs https://nodejs.org/en/
 2. Clone repo
-3. Go to directory and run npm init. Node should find all dependencies in package.json and install them
+3. Go to directory and run npm init. 
+4. Run npm install --save to install all dependencies
 4. Run nodemon app.js
