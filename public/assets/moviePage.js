@@ -41,8 +41,8 @@ function changeFavStatus(favButtonValue){
         if(data.updated===true){
             changeButtonText();
         }else if(data.authenticated == false){
-            console.log('You need to sign in to add to your favourites!');
-            //alert('You need to sign in to add to your favourites!');
+            //console.log('You need to sign in to add to your favourites!');
+            alert('You need to sign in to add to your favourites!');
         }
         
     });

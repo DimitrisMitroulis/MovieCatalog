@@ -467,10 +467,6 @@ module.exports = function(app){
 
     app.get('/removeFromFavourites',function(req,res){
         if(req.isAuthenticated()){
-        console.log(req.query.isFavourite);
-        console.log(req.query.mov_id);
-        console.log(req.user.id);
-
 
         profileSchema.updateOne({_id: req.user.id },{$unset:{favourites:req.query.mov_id}}, (err, entry) => {
             if (err) {
@@ -490,10 +486,6 @@ module.exports = function(app){
 
     app.get('/addToFavourites',function(req,res){
         if(req.isAuthenticated()){
-            console.log(req.query.isFavourite);
-            console.log(req.query.mov_id);
-            console.log(req.user.id);
-
 
             profileSchema.updateOne({_id: req.user.id },{$push:{favourites:req.query.mov_id}}, (err, entry) => {
                 if (err) {
