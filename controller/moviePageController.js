@@ -465,25 +465,53 @@ module.exports = function(app){
         
     });
 
-    app.get('/changeFavStatus',checkAuthenticated,function(req,res){
-        console.log(req.params.movie_id);
-        console.log(req.params.movie_id);
+    app.get('/removeFromFavourites',function(req,res){
+        if(req.isAuthenticated()){
+        console.log(req.query.isFavourite);
+        console.log(req.query.mov_id);
+        console.log(req.user.id);
 
-        
-        Entry.findOne({_id: req.user.id ,favorites: { $in: [req.params.movie_id] }}, (err, entry) => {
+
+        profileSchema.updateOne({_id: req.user.id },{$unset:{favourites:req.query.mov_id}}, (err, entry) => {
             if (err) {
               console.error(err);
               return;
             }
-            console.log(entry); 
+            res.status(200).json({authenticated: false,updated:true});
           });
-        
-        res.status(200).json(err);
+                    
+        }else{
+            res.status(200).json({authenticated: false});
+            
+        }
+    });
+
+
+
+    app.get('/addToFavourites',function(req,res){
+        if(req.isAuthenticated()){
+            console.log(req.query.isFavourite);
+            console.log(req.query.mov_id);
+            console.log(req.user.id);
+
+
+            profileSchema.updateOne({_id: req.user.id },{$push:{favourites:req.query.mov_id}}, (err, entry) => {
+                if (err) {
+                  console.error(err);
+                  return;
+                }
+                res.status(200).json({authenticated: false,updated:true});
+              });
+
+            
+        }else{
+            res.status(200).json({authenticated: false});
+            
+        }
     });
 
 
     app.get('/isFavourite',function(req,res){
-    
         if(req.isAuthenticated()){
             //console.log(req.user.id);
             //console.log(req.query.mov_id);
@@ -495,14 +523,14 @@ module.exports = function(app){
                 console.error(err);
                 return;
                 }
-                console.log(entry.favourites);
+                //console.log(entry.favourites);
                 const isFavorite = entry.favourites.includes(req.query.mov_id);
-                res.status(200).json({isFavourite: isFavorite});
+                res.status(200).json({authenticated : true,isFavourite: isFavorite});
 
             });
 
         }else{
-            res.status(200).json({authenticated: false});
+            res.status(200).json({authenticated: false,isFavourite: false});
             
         }
     
