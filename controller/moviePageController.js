@@ -483,19 +483,21 @@ module.exports = function(app){
 
 
     app.get('/isFavourite',function(req,res){
-        console.log(req.params.mov_id);
+    
         if(req.isAuthenticated()){
-            console.log(req.user.id);
-            
+            //console.log(req.user.id);
+            //console.log(req.query.mov_id);
+            // {_id: req.user.id ,favorites: { $in: [req.query.mov_id] }}
+            // find({$or: [{rating: {$gt: 8}},{author: X}]})
 
-
-
-            profileSchema.findOne({_id: req.user.id ,favorites: { $in: [req.params.mov_id] }}, (err, entry) => {
+            profileSchema.findOne({$and: [{_id: req.user.id}]}, (err, entry) => {
                 if (err) {
                 console.error(err);
                 return;
                 }
-                res.status(200).json(entry);
+                console.log(entry.favourites);
+                const isFavorite = entry.favourites.includes(req.query.mov_id);
+                res.status(200).json({isFavourite: isFavorite});
 
             });
 
