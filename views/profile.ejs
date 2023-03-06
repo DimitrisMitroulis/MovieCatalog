@@ -3,9 +3,14 @@
   <head>
     <title>User Profile</title>
     <link rel="stylesheet" href="./assets/profile-styles.css"/>
-
+    <script
+    src="https://code.jquery.com/jquery-3.6.3.js"
+    integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+    crossorigin="anonymous">
+  </script>
+  <script type="text/javascript" src="/assets/profile.js"></script>
   </head>
-  
+ 
   <body>
     <div class="container">
       <h1>User Profile</h1>
@@ -14,7 +19,17 @@
         <span>Email:</span>
         <span>Username:</span>
         <p>exampleuser</p>
+        
+        <form action="/logout?_method=DELETE" method="POST">
+          <button type="submit">Log Out</button>
+        </form>
+
       </div>
     </div>
+    
+    <div class="leftright">
+      <div id="result">
+        <main id="MYmovies"></main>
+      </div>   
   </body>
 </html>

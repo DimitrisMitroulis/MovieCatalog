@@ -24,6 +24,7 @@ const bcrypt = require('bcrypt');
 const flash = require('express-flash');
 const session = require('express-session');
 const passport = require('passport');
+const methodOverride = require('method-override');
 
 module.exports = function(app){
     initializePassport(
@@ -46,6 +47,7 @@ module.exports = function(app){
     }))
     app.use(passport.initialize())
     app.use(passport.session())
+    app.use(methodOverride('_method'))
 
 
 
@@ -105,32 +107,25 @@ module.exports = function(app){
 
     app.get('/add-movie/',function(req,res){
         const m = new MovieSchema({
-            title : 'Movie1',
-            year : 2000,
+            title : 'Movie3',
+            year : 1998,
             genres : ["Drama" , "Comedy"],
             director : 'no',
             actors : [
-                    "Biggus dickus" ,
                     "Morgan Freeman" ,
                     "Bob Gunton"
                     ],
-            plot : 'another',
+            plot : 'plottt',
             poster : 'anotherimage.jpg',
             rating : 1,
-            trailer : "link",
+            trailer : "link2",
             comments : [
                 {
                 Name: "Name1",
                 text: "bad",
                 rating : 1,
                 PersonId: "aaskjdabsdkjabsd"
-                },
-                {
-                Name: "Namee",
-                text: "i liked it",
-                rating : 1,
-                PersonId: "asdasdasda"
-                },
+                }
             ],
             nowPlaying:true
 });
@@ -350,8 +345,6 @@ module.exports = function(app){
         res.render('profile', {user: req.user});
     });
 
-
-
     function checkAuthenticated(req, res, next) {
         if(req.isAuthenticated()){
             return next()
@@ -366,13 +359,77 @@ module.exports = function(app){
     next()
     }
     
+    app.delete('/logout', (req, res) => {
+        req.logout(function(err) {
+            if (err) { return next(err); }
+            res.redirect('/login');
+          });
+      })
+
+
+    app.get('/getUserData',checkAuthenticated,(req, res) => {
+        
+        profileSchema.findById(req.user.id, (err, user) => {
+            if(err){
+                res.status(404).json(err);
+            }
+            res.status(200).json(user);
+          });
+        
+
+    });
+
+    app.get('/update-movie/',checkAuthenticated,(req, res) => {
+        res.render('update-movie',{movie :req.query.movie_id});
+
+    });
+
+    app.get('/getMovie/:id',(req, res) => {
+        MovieSchema.findById(req.params.id, (err, movie) => {
+            if(err){
+                res.status(404).json(err);
+            }
+            res.status(200).json(movie);
+          });
+          
+        //res.render('update-movie',{movie :req.query.movie_id});
+
+    });
+
+
+    app.post('/update-movie',checkAuthenticated,(req, res) => {
+        var id = req.body.movie_id;
+        console.log(id);
+        var update = req.body;
+        delete update['_id']; 
+       
+
+        MovieSchema.findByIdAndUpdate(id, req.body, { new: true })
+        .then((updatedEntry) => {
+            res.redirect('/profile');
+        })
+        .catch((err) => {
+            alert(err);
+            res.redirect('/profile');
+        });
+
+    });
+
+    app.post('/delete-movie',(req, res) => {
+        var id = req.body.movie_id;
+        MovieSchema.findByIdAndDelete(id, (err, doc) => {
+            if (err) {
+                alert(err);
+                res.redirect('/profile');
+            } else {
+                res.redirect('/profile');
+            }
+        });
+
+
+    });
+
 };  
-
-
-    
-   
-    
-
 
 
 
