@@ -14,5 +14,7 @@
 1. Install nodejs https://nodejs.org/en/
 2. Clone repo
 3. Go to directory and run npm init. 
-4. Run npm install --save to install all dependencies
-4. Run nodemon app.js
+4. Run npm install to install all dependencies
+4. Run  ```nodemon app.js``` or ```npm start```
+5. Go to brower and type: ```http://localhost:7000/search```
+
