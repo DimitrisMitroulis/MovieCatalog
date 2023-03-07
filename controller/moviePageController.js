@@ -58,7 +58,7 @@ module.exports = function(app){
 
     const uri = 'mongodb+srv://user1:user1@moviecatalog.vyyguoc.mongodb.net/TodoList?retryWrites=true&w=majority';
     mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true})
-    .then((result) => app.listen(7000),
+    .then((result) => app.listen( process.env.PORT || 7000),
                     console.log('connected to db'))
     .catch((err) => console.error(err));
 
