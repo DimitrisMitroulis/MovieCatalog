@@ -1,25 +1,36 @@
 const IMG_URL = 'https://image.tmdb.org/t/p/w500'
+var header; 
+var MyUrl;
 
 $(document).ready(function() {
 
+     
     window.onload = function() {
-        checkUserType()
+        header = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
+        MyUrl = header+'/api/search?search=';
+        MyUrl += '&sort=';
+        MyUrl += '&ascdesc=1';
+        MyUrl += '&playingNow=all';
+        
+        
+        checkUserType(MyUrl);
         
       };
 
 });
 
 
-var MyUrl = 'http://localhost:7000/api/search?search=';
-            MyUrl += '&sort=';
-            MyUrl += '&ascdesc=';
-            MyUrl += '&playingNow=all';
 
-function checkUserType(){
-    fetch('http://localhost:7000/getUserData').then(res => res.json()).then(data => {
+            
+//api/search?search=&genres=&sort=title&ascdesc=1&playingNow=all
+
+
+function checkUserType(url){
+    fetch(header+'/getUserData').then(res => res.json()).then(data => {
         console.log(data);   
         if(data.UserType == 'Admin'){
-            getMyMovies(MyUrl);
+           
+            getMyMovies(url);
         }
     })
 }

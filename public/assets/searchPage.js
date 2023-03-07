@@ -4,10 +4,15 @@ const DISCOVER_URL = BASE_URL + 'discover/movie?sort_by=popularity.desc&'+ APIKE
 var SEARCH_URL =  BASE_URL + 'search/movie?'+ APIKEY;
 const IMG_URL = 'https://image.tmdb.org/t/p/w500'
 const NOW_PLAYING_URL = BASE_URL+'movie/now_playing?'+ APIKEY;
+var header;
+//var header = 'http://localhost:7000';
 
 var TMDB_URL;
 
 $(document).ready(function() {
+    header = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
+    //console.log('windowurl '+url);
+
 
     const movieName = document.getElementById('movie-name');
     const searchResults = document.getElementById('searchResults');
@@ -18,14 +23,14 @@ $(document).ready(function() {
     var playingStatus = document.querySelector("#playingStatus").value;
             
 
+    
+    var MyUrl = header+'/api/search?search='+movieName.value;
+    MyUrl += '&genres='+genre;
+    MyUrl += '&sort='+orderBy;
+    MyUrl += '&ascdesc='+AscDesc;
+    MyUrl += '&playingNow='+playingStatus;
 
-    var MyUrl = 'http://localhost:7000/api/search?search='+movieName.value;
-            MyUrl += '&genres='+genre;
-            MyUrl += '&sort='+orderBy;
-            MyUrl += '&ascdesc='+AscDesc;
-            MyUrl += '&playingNow='+playingStatus;
-
-
+///api/search?search=&genres=&sort=title&ascdesc=1&playingNow=all
    
     
     window.onload = function() {
@@ -44,7 +49,7 @@ $(document).ready(function() {
             playingStatus = document.querySelector("#playingStatus").value;
             
 
-            MyUrl = 'http://localhost:7000/api/search?search='+movieName.value;
+            MyUrl = header+'/api/search?search='+movieName.value;
             MyUrl += '&genres='+genre;
             MyUrl += '&sort='+orderBy;
             MyUrl += '&ascdesc='+AscDesc;

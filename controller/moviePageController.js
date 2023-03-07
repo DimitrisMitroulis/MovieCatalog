@@ -68,17 +68,11 @@ module.exports = function(app){
         MovieSchema.findById(req.params.id).then((movie) => {
                 if(!movie){
                     console.log('movie not found');
-                    res.render('error-page');    
-                    
+                    res.render('error-page',{st: "Movie not found"});    
                 }
-                
                 res.render('moviePage',{movieId:req.params.id, data:movie});
             
             }).catch((error) => {
-                var error = new Error('Resource not found');
-                error.status = 404;
-                res.render('error-page',{st:error});    
-                // Pass the error to the next function
                 console.log(error);      
                 
             })
@@ -481,8 +475,6 @@ module.exports = function(app){
             
         }
     });
-
-
 
     app.get('/addToFavourites',function(req,res){
         if(req.isAuthenticated()){
