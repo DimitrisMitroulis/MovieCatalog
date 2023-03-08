@@ -180,9 +180,15 @@ module.exports = function(app){
 
 
     app.get('/error-page',function(req,res){
-        res.render('error-page');
+        res.render('error-page',{st:""});
 
     });
+
+    app.get('/wrong-cred',function(req,res){
+        res.render('error-page',{st:"Wrong Email or password"});
+
+    });
+
 
     app.get("/search", async (req, res) => {
         try {
@@ -300,7 +306,7 @@ module.exports = function(app){
     
     app.post("/login",checkNotAuthenticated,passport.authenticate('local', {
         successRedirect: '/profile',
-        failureRedirect: '/error-page',
+        failureRedirect: '/wrong-cred',
         failureFlash: true
       }))
    
@@ -423,7 +429,7 @@ module.exports = function(app){
         try{
             movieSchema(m).save(function(err,data){
                 if (err) {
-                    res.render('error-page',{st:e});
+                    res.render('error-page',{st:err});
                     
                 }
                 res.redirect('/profile');

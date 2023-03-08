@@ -15,7 +15,7 @@ async function initialize(passport,getUserById){
                     return done(null, false, { message: 'No user with that email' })
                 }
                 try{
-                    console.log('email'+ email+ ' password: '+ password);
+                    console.log('email: '+ email+ ' password: '+ password);
                     await profileSchema.findOne({$and:[{email: email},{password: password}]})
                     .exec()
                     .then(user => {
@@ -58,7 +58,7 @@ async function initialize(passport,getUserById){
     })
     passport.deserializeUser((id, done) => {
         profileSchema.findById(id, (err, user) => {
-          done(err, user);
+            done(err, user);
         });
       });
 }
