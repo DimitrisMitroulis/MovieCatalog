@@ -53,9 +53,9 @@
 			</div>			
 		</div>	
 	</div>
-	
-	<button id="favButton">Add to Favorites</button>
-
+	<% if(isFromTmdb !== "true") {%>
+		<button id="favButton">Add to Favorites</button>
+	<%}%>
 	<form action="/addComment" method="POST">
 		<div class="comments">
 			<h2>Add comment: </h2>
