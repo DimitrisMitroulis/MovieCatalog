@@ -18,6 +18,9 @@ const initializePassport = require('./passport-config');
 const bcrypt = require('bcrypt');
 //console.log(cr.randomBytes(64).toString('hex'));
 //console.log(cr.randomBytes(64).toString('hex'));
+const fetch = require("node-fetch");
+
+
 
 
 
@@ -28,6 +31,7 @@ const methodOverride = require('method-override');
 const movieSchema = require('../models/movieSchema');
 
 module.exports = function(app){
+
     initializePassport(
         passport,
         async id => {
