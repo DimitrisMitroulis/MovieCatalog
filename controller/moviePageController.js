@@ -307,7 +307,7 @@ module.exports = function(app){
 
     app.get("/profile", checkAuthenticated, (req, res) => {
         //console.log('profile: '+ req.user.id);
-
+       
         res.render('profile', {user: req.user});
     });
 

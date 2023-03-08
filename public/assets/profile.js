@@ -20,16 +20,26 @@ $(document).ready(function() {
 });
 
 
-
-            
 //api/search?search=&genres=&sort=title&ascdesc=1&playingNow=all
+
+function createButton(){
+    const createButtonMain = document.getElementById('createMovieMain');
+    const createButton = document.createElement('createButton');
+    const button= `
+    <form action="/create-movie" method="GET">
+        <button class="create-btn" type="submit">Create Movie</button>
+    </form>
+    `;
+    createButtonMain.innerHTML += button;
+    createButtonMain.appendChild(createButton);
+}
 
 
 function checkUserType(url){
     fetch(header+'/getUserData').then(res => res.json()).then(data => {
         console.log(data);   
         if(data.UserType == 'Admin'){
-           
+            createButton();
             getMyMovies(url);
         }
     })
@@ -50,7 +60,6 @@ function showMyMovies(movies){
 
      //show every retrieved movie
      movies.forEach(movie => {
-        console.log('1');
         const {title, poster_path, rating,plot,_id} = movie;
          const movieEl = document.createElement('MYmovies');
          const html= `<hr class='solid'>

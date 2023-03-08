@@ -31,8 +31,10 @@ async function initialize(passport,getUserById){
                                 email : user.email,
                                 userId : user._id,
                                 username : user.username,
-                                userType : user.userType,
-                                dateCreated : user.dateCreated
+                                userType : user.UserType,
+                                dateCreated : user.dateCreated,
+   
+
                             }
                             return done(null,user);
                         }
