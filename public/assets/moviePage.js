@@ -1,24 +1,40 @@
 var isFav;
 var auth;
 var header;
+const APIKEY = 'api_key=132908b07cbc33575b9983cfc84f9178';
+const BASE_URL = 'https://api.themoviedb.org/3/';
 
 $(document).ready(function() {
     var movie_id = document.getElementById("movie_id");
+    var isFromTmdb = document.getElementById("isFromTmdb");
+    
     header = window.location.href;
-
     header = header.substring(0, header.lastIndexOf("/", header.lastIndexOf("/") - 1));
-    
-    
 
-
+   
+        
 
     window.onload = function() {
-        isFavourite(movie_id);
+        if (isFromTmdb.value !== "true"){
+            isFavourite(movie_id);
+        }
+        
         
     };
     
 
 }); 
+
+function getTmdbMoveData(movie_id){
+    var getTmdbMovie = BASE_URL+'movie/'+movie_id+'?'+APIKEY;
+
+    fetch(getTmdbMovie).then(res => res.json()).then(data => {
+        console.log(data);
+       
+
+    });
+}
+
 
 var favButton = document.getElementById("favButton");
 favButton.addEventListener('click', () => {

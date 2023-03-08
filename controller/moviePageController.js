@@ -65,18 +65,33 @@ module.exports = function(app){
 
 
     app.get('/movie/:id', function(req,res){ 
-        MovieSchema.findById(req.params.id).then((movie) => {
+        //console.log(req.query.isFromTmdb === "true");
+        const APIKEY = 'api_key=132908b07cbc33575b9983cfc84f9178';
+        const BASE_URL = 'https://api.themoviedb.org/3/';
+        
+        var movie;
+
+        if(req.query.isFromTmdb === "true"){
+            var getTmdbMovie = BASE_URL+'movie/'+req.params.id+'?'+APIKEY;
+            fetch(getTmdbMovie).then(res => res.json()).then(movie => {
                 if(!movie){
-                    console.log('movie not found');
                     res.render('error-page',{st: "Movie not found"});    
                 }
-                res.render('moviePage',{movieId:req.params.id, data:movie});
-            
+                res.render('moviePage',{movieId:req.params.id, data:movie,  isFromTmdb : req.query.isFromTmdb});
+            });
+        }else{
+            MovieSchema.findById(req.params.id).then((movie) => {
+                if(!movie){
+                  
+                }
+                res.render('moviePage',{movieId:req.params.id, data:movie,  isFromTmdb : req.query.isFromTmdb});
+                
             }).catch((error) => {
                 console.log(error);      
                 
             })
-        
+        }
+
     });
     
 
@@ -528,6 +543,7 @@ module.exports = function(app){
     });
 
 }
+
 
 
 //returns if movie is in person's favourite List

@@ -7,6 +7,7 @@ const NOW_PLAYING_URL = BASE_URL+'movie/now_playing?'+ APIKEY;
 var header;
 //var header = 'http://localhost:7000';
 
+
 var TMDB_URL;
 
 $(document).ready(function() {
@@ -57,17 +58,13 @@ $(document).ready(function() {
 
 
             SEARCH_URL += '&query='+movieName.value;
+
             
             (playingStatus == "true")
                 ? TMDB_URL = NOW_PLAYING_URL
                 : TMDB_URL = SEARCH_URL;
 
             
-            //set asc desc option according to field
-            // var discover = BASE_URL+ 'discover/movie?sort_by='
-            // +(order)
-            // +'.'
-            // +(AscDesc === "-1") ?'desc' : 'asc'
            
             if(movieName.value === ""){
                 getMyMovies(MyUrl);  
@@ -78,17 +75,7 @@ $(document).ready(function() {
                 getMyMovies(MyUrl);  
                 getMovies(TMDB_URL);
                 
-                
-                //getMovies(SEARCH_URL);
-            
-                //var e = document.getElementById("movie-name");
-                //   fetch(`/search?search=${e.value.toString()}`)
-                //   .then(response => {
-                //     if (response.ok) {
-                        
-                //         //window.location.href = response.url;
-                //     }
-                //   })
+
                 }
             }
       });
@@ -117,13 +104,13 @@ $(document).ready(function() {
 
         //show every retrieved movie
         res.forEach(movie => {
-            const {title, poster_path, vote_average,overview,_id} = movie;
+            const {title, poster_path, vote_average,overview,id} = movie;
             const movieEl = document.createElement('APImovies');
             const html= `<hr class='solid'>
                 <div class='movie-block'>
                     <div class='movie-info'>
                     <img src='${IMG_URL+poster_path}' alt='${title}'>
-                    <h3 id="${_id}" class='movie-title'>${title}</h3>
+                    <h3 id="${id}" class='movie-title'>${title}</h3>
                     <p class='movie-description'>${overview}</p>
                     <p style=color:${getColor(vote_average)} class='movie-rating'>Rating: ${vote_average}/10</p>
                     </div>
@@ -132,6 +119,13 @@ $(document).ready(function() {
             movieEl.innerHTML += html;
             main.appendChild(movieEl);
 
+            //
+
+            var myHeading = document.getElementById(id);
+            myHeading.onclick = function() {
+                window.location.href = 
+                window.location.href = '/movie/'+id+'?isFromTmdb=true';
+              };
         })
     }
     
@@ -155,13 +149,13 @@ $(document).ready(function() {
                     </div>
                  </div>`;
  
-            movieEl.innerHTML += html;
-            main.appendChild(movieEl);
-            var myHeading = document.getElementById(_id);
-            myHeading.onclick = function() {
-                window.location.href = '/movie/'+_id;
-              };
-         })
+                 movieEl.innerHTML += html;
+                 main.appendChild(movieEl);
+                 var myHeading = document.getElementById(_id);
+                 myHeading.onclick = function() {
+                     window.location.href = '/movie/'+_id+'?isFromTmdb=false';
+                   };
+            })
      }
  
 

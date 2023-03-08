@@ -36,16 +36,17 @@
 		<div id="info">
 			<div class="movie-info" style="padding: 20px;">
 				<!-- <h1>Movie Id :<%= movieId %></h1> -->
-				<h1>Movie Title:<%= data.title %> </h1>
-				<p>Release Year: <%=data.year%> </p>
-				<p>Director: <%=data.director%></p>
-				<p>Starring: <%=data.actors%> </p>
-				<p>Rating:<%=data.rating%>/10</p>
-				<p>Genres:<%=data.genres%></p>
+			
+				<h1>Movie Title:<%= data.title || data.original_title %> </h1>
+				<p>Release Year: <%= data.year || data.release_date %> </p>
+				<p>Director: <%= data.director || "N/A" %></p>
+				<p>Starring: <%= data.actors || "N/A" %> </p>
+				<p>Rating:<%= data.rating ||data.vote_average %>/10</p>
+				<p>Genres:<%= data.genres || data.genres.name %></p>
 				<a class="link" href='<%=data.trailer%>'>
 					<h3 class="link">Trailer</h3>
 				</a>
-				<% if(data.nowPlaying) {%>
+				<% if(data.nowPlaying || data.status === "Released") {%>
 					<h2>Now playing</h2>
 				<% } %>
 				
@@ -61,13 +62,17 @@
 			
 			<label for="name">Name:</label>
 			<input id="movie_id" type="hidden" name="movie_id" value=<%=movieId %>> 
+			<input id="isFromTmdb" type="hidden" name="isFromTmdb" value=<%=isFromTmdb %>> 
 			<input required pattern=".{1,}" type="text" id="name" name="text">
 			<button  id="commentButton" type="submit">Submit</button>
 			<div id="result"></div>
 			<div class="comment-list"></div>
-				<h2>Comments: </h2>
-				<% for(var i =0 ; i < data.comments.length ;i++){%>
-					<li><%= data.comments[i].text %></li>
+			
+				<% if(isFromTmdb !== "true") {%>
+					<h2>Comments: </h2>
+					<% for(var i =0 ; i < data.comments.length ;i++){%>
+						<li><%= data.comments[i].text %></li>
+					<%}%>
 				<%}%>
 			</div>
 		</div>
