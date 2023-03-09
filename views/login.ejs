@@ -23,8 +23,8 @@ HAPPY CODING :) -->
 <!-- partial:index.partial.html -->
 <div id="login-form-wrap">
   <h2>Login</h2>
-  <% if (messages.error) {%>
-  <%messages.error%>
+  <% if (typeof error !== 'undefined') {%>
+    <p class="error-message"><%=error%></p>
   <%}%>
   <form id="login-form" action="/login" method='POST'>
     <p>

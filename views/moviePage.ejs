@@ -42,7 +42,17 @@
 				<p>Director: <%= data.director || "N/A" %></p>
 				<p>Starring: <%= data.actors || "N/A" %> </p>
 				<p>Rating:<%= data.rating ||data.vote_average %>/10</p>
-				<p>Genres:<%= data.genres || data.genres.name %></p>
+				<!-- <p>Genres:<% data.genres || data.genres.name %></p> -->
+				<% if(isFromTmdb === "true") {%>
+					<p>Genres:</p>
+					<% for(var i =0 ; i < data.genres.length ;i++){%>
+						<li><%= data.genres[i].name %></li>
+					<%}%>
+				<%}%>
+				<%if(isFromTmdb === "false"){%>
+					<p>Genres:<%= data.genres %></p>
+				<%}%>
+
 				<a class="link" href='<%=data.trailer%>'>
 					<h3 class="link">Trailer</h3>
 				</a>
@@ -56,27 +66,31 @@
 	<% if(isFromTmdb !== "true") {%>
 		<button id="favButton">Add to Favorites</button>
 	<%}%>
-	<form action="/addComment" method="POST">
-		<div class="comments">
-			<h2>Add comment: </h2>
-			
-			<label for="name">Name:</label>
-			<input id="movie_id" type="hidden" name="movie_id" value=<%=movieId %>> 
-			<input id="isFromTmdb" type="hidden" name="isFromTmdb" value=<%=isFromTmdb %>> 
-			<input required pattern=".{1,}" type="text" id="name" name="text">
-			<button  id="commentButton" type="submit">Submit</button>
-			<div id="result"></div>
-			<div class="comment-list"></div>
-			
-				<% if(isFromTmdb !== "true") {%>
-					<h2>Comments: </h2>
-					<% for(var i =0 ; i < data.comments.length ;i++){%>
-						<li><%= data.comments[i].text %></li>
-					<%}%>
-				<%}%>
-			</div>
-		</div>
-	</form>
+	
+	<% if(isFromTmdb !== "true") {%>
+		<form action="/addComment" method="POST">
+			<div class="comments">
+				<h2>Add comment: </h2>
+				
+				<label for="name">Name:</label>
+				<input id="movie_id" type="hidden" name="movie_id" value=<%=movieId %>> 
+				<input id="isFromTmdb" type="hidden" name="isFromTmdb" value=<%=isFromTmdb %>> 
+				<input required pattern=".{1,}" type="text" id="name" name="text">
+				<button  id="commentButton" type="submit">Submit</button>
+				<div id="result"></div>
+				<div class="comment-list"></div>
+				
+					
+						<h2>Comments: </h2>
+						<% for(var i =0 ; i < data.comments.length ;i++){%>
+							<li><%= data.comments[i].text %></li>
+						<%}%>
+					</div>
+				</div>
+			</form>
+
+	<%}%>
+
 <script src="/assets/moviePage.js"></script>
 	
 </body>

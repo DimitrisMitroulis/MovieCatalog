@@ -88,7 +88,7 @@ module.exports = function(app){
                 if(!movie){
                   
                 }
-                res.render('moviePage',{movieId:req.params.id, data:movie,  isFromTmdb : req.query.isFromTmdb});
+                res.render('moviePage',{movieId:req.params.id, data:movie, isFromTmdb : req.query.isFromTmdb});
                 
             }).catch((error) => {
                 console.log(error);      
@@ -203,10 +203,7 @@ module.exports = function(app){
 
     });
 
-    app.get('/wrong-cred',function(req,res){
-        res.render('error-page',{st:"Wrong Email or password"});
-
-    });
+   
 
 
     app.get("/search", async (req, res) => {
@@ -323,12 +320,23 @@ module.exports = function(app){
         res.render('login');
     });
     
-    app.post("/login",checkNotAuthenticated,passport.authenticate('local', {
+    // app.post("/login",checkNotAuthenticated,passport.authenticate('local', {
+    //     successRedirect: '/profile',
+    //     failureRedirect: '/wrong-cred',
+    //     failureFlash: true
+    //   }))
+   
+    app.post('/login',checkNotAuthenticated, passport.authenticate('local', {
         successRedirect: '/profile',
         failureRedirect: '/wrong-cred',
         failureFlash: true
-      }))
-   
+    }))
+
+
+    app.get('/wrong-cred',function(req,res){
+        res.render('login',{error:"Wrong Email or password"});
+
+    });
 
     app.get("/profile", checkAuthenticated, (req, res) => {
         //console.log('profile: '+ req.user.id);
