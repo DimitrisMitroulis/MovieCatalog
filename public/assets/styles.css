@@ -49,12 +49,7 @@ body {
   border: 2px solid #eee;
 }
 
-.movie-block img {
-  width: 150px;
-  height: 225px;
-  margin-right: 20px;
-  border-radius: 10px;
-}
+
 
 .movie-info {
   flex: 1;
@@ -204,4 +199,12 @@ a {
 
 .movie-title:hover{
   cursor: pointer;
+}
+
+
+.image-poster {
+  height: 225px;
+  width: auto;
+  margin-right: 20px;
+  border-radius: 10px;
 }

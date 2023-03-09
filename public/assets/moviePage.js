@@ -6,7 +6,7 @@ const BASE_URL = 'https://api.themoviedb.org/3/';
 
 $(document).ready(function() {
     var movie_id = document.getElementById("movie_id");
-    var isFromTmdb = document.getElementById("isFromTmdb");
+   
     
     header = window.location.href;
     header = header.substring(0, header.lastIndexOf("/", header.lastIndexOf("/") - 1));
@@ -15,7 +15,8 @@ $(document).ready(function() {
         
 
     window.onload = function() {
-        if (isFromTmdb.value !== "true"){
+        var isFromTmdb = document.getElementById("isFromTmdb");
+        if (isFromTmdb && isFromTmdb.value !== "true"){
             isFavourite(movie_id);
         }
         
@@ -37,10 +38,11 @@ function getTmdbMoveData(movie_id){
 
 
 var favButton = document.getElementById("favButton");
-favButton.addEventListener('click', () => {
-    changeFavStatus(favButton.innerHTML)
-  });
-
+if(favButton){
+    favButton.addEventListener('click', () => {
+        changeFavStatus(favButton.innerHTML)
+    });
+}
 
 function isFavourite(movie_id){
     fetch(header+'/isFavourite?mov_id='+movie_id.value).then(res => res.json()).then(data => {

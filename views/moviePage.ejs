@@ -35,9 +35,20 @@
 	<div id="main">
 		<div id="info">
 			<div class="movie-info" style="padding: 20px;">
-				<!-- <h1>Movie Id :<%= movieId %></h1> -->
-			
 				<h1>Movie Title:<%= data.title || data.original_title %> </h1>
+				<!-- <h1>Movie Id :<%= movieId %></h1> -->
+				<!-- 1RRWazcUGOxLhGYu9pMC82viWm6nxZ5xO -->
+				<!-- <img src=<%='https://drive.google.com/uc?export=view&id='+data.image%> alt="Your image description"> -->
+				<% if(isFromTmdb === "true") {%>
+					<img class='image-poster'src=<%='https://image.tmdb.org/t/p/w500'+data.poster_path%> alt='movie poster'>
+				<%}%>
+				<% if(isFromTmdb === "false") {%>
+					<img class='image-poster' src=<%='https://drive.google.com/uc?export=view&id='+data.poster%> alt="Your image description">
+				<%}%>
+				<!-- const IMG_URL = 'https://image.tmdb.org/t/p/w500'
+				<img src='${IMG_URL+poster_path}' alt='${title}'> -->
+
+				
 				<p>Release Year: <%= data.year || data.release_date %> </p>
 				<p>Director: <%= data.director || "N/A" %></p>
 				<p>Starring: <%= data.actors || "N/A" %> </p>

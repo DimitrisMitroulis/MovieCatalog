@@ -72,8 +72,6 @@ module.exports = function(app){
         //console.log(req.query.isFromTmdb === "true");
         const APIKEY = 'api_key=132908b07cbc33575b9983cfc84f9178';
         const BASE_URL = 'https://api.themoviedb.org/3/';
-        
-        var movie;
 
         if(req.query.isFromTmdb === "true"){
             var getTmdbMovie = BASE_URL+'movie/'+req.params.id+'?'+APIKEY;

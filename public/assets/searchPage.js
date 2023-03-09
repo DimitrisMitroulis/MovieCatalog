@@ -118,12 +118,9 @@ $(document).ready(function() {
 
             movieEl.innerHTML += html;
             main.appendChild(movieEl);
-
-            //
-
             var myHeading = document.getElementById(id);
-            myHeading.onclick = function() {
-                window.location.href = 
+            myHeading.onclick = function(e) {
+                e.preventDefault();
                 window.location.href = '/movie/'+id+'?isFromTmdb=true';
               };
         })
@@ -137,23 +134,24 @@ $(document).ready(function() {
  
          //show every retrieved movie
          data.forEach(movie => {
-            const {title, poster_path, rating,plot,_id} = movie;
-             const movieEl = document.createElement('MYmovies');
+            const {title, poster, rating,plot,_id,} = movie;
+             const myMovieEl = document.createElement('MYmovies');
              const html= `<hr class='solid'>
                  <div class='movie-block'>
                     <div class='movie-info'>
-                    <img src='${IMG_URL+poster_path}' alt='${title}'>
+                    <img class='image-poster' src='https://drive.google.com/uc?export=view&id=${poster}' alt="Your image description">
                     <h3 id="${_id}" class='movie-title'>${title}</h3>
                     <p class='movie-description'>${plot}</p>
                     <p style=color:${getColor(rating)} class='movie-rating'>Rating: ${rating}/10</p>
                     </div>
                  </div>`;
  
-                 movieEl.innerHTML += html;
-                 main.appendChild(movieEl);
-                 var myHeading = document.getElementById(_id);
-                 myHeading.onclick = function() {
-                     window.location.href = '/movie/'+_id+'?isFromTmdb=false';
+                 myMovieEl.innerHTML += html;
+                 main.appendChild(myMovieEl);
+                 var Heading = document.getElementById(_id);
+                 Heading.onclick = function(e) {
+                    e.preventDefault();
+                    window.location.href = '/movie/'+_id+'?isFromTmdb=false';
                    };
             })
      }
