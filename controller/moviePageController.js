@@ -445,7 +445,7 @@ module.exports = function(app){
             director : req.body.director,
             actors : actors.split(','),
             plot : req.body.plot,
-            poster : 'anotherimage.jpg',
+            poster : '1RRWazcUGOxLhGYu9pMC82viWm6nxZ5xO',
             rating : req.body.rating,
             trailer : req.body.trailer,
             nowPlaying: nowPlaying

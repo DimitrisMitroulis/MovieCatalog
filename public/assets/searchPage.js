@@ -109,7 +109,7 @@ $(document).ready(function() {
             const html= `<hr class='solid'>
                 <div class='movie-block'>
                     <div class='movie-info'>
-                    <img src='${IMG_URL+poster_path}' alt='${title}'>
+                    <img class='image-poster' src='${IMG_URL+poster_path}' alt='${title}'>
                     <h3 id="${id}" class='movie-title'>${title}</h3>
                     <p class='movie-description'>${overview}</p>
                     <p style=color:${getColor(vote_average)} class='movie-rating'>Rating: ${vote_average}/10</p>

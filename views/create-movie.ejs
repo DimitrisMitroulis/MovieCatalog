@@ -18,7 +18,11 @@
             </ul>
           </nav>
           
-        <form class="movie-form"action="/create-movie" method="POST">
+        <form class="movie-form"action="/create-movie" method="POST" enctype="multipart/form-data">
+            <div>
+                <label for="image">Upload Image:</label>
+                <input type="file" name="image" id="image" accept="image/jpeg,image/png" required>
+            </div>
             <div>
                 <label for="title">Title:</label>
                 <input type="text" id="title" name="title">
@@ -62,5 +66,15 @@
             </div>
             <button type="submit">Submit</button>
         </form>
+        <script>
+            const formElem = document.querySelector('form');
+            formElem.addEventListener('submit', async (e) => {
+              e.preventDefault();
+              await fetch('/upload', {
+                method: 'POST',
+                body: new FormData(formElem),
+              });
+            });
+          </script>
     </body>
 </html>
