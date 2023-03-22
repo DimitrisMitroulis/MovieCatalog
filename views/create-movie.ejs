@@ -17,8 +17,8 @@
               <li><a href="/login">Login</a></li>
             </ul>
           </nav>
-          
-        <form class="movie-form"action="/create-movie" method="POST" enctype="multipart/form-data">
+
+        <form id="form" class="movie-form" action="/create-movie" method="POST" enctype="multipart/form-data">
             <div>
                 <label for="image">Upload Image:</label>
                 <input type="file" name="image" id="image" accept="image/jpeg,image/png" required>
@@ -66,15 +66,30 @@
             </div>
             <button type="submit">Submit</button>
         </form>
-        <script>
-            const formElem = document.querySelector('form');
+          <!--<script>
+           const formElem = document.querySelector('#form');
             formElem.addEventListener('submit', async (e) => {
-              e.preventDefault();
-              await fetch('/upload', {
-                method: 'POST',
-                body: new FormData(formElem),
-              });
-            });
-          </script>
+                e.preventDefault();
+                const formData = new FormData(formElem);
+                const imageInput = formElem.querySelector('input[type="file"]');
+                const imageFile = imageInput.files[0];
+                formData.append('image', imageFile);
+                console.log(formData);
+
+                const xhr = new XMLHttpRequest(); // create a new XMLHttpRequest object
+
+                xhr.open('POST', '/create-movie'); // specify the URL and HTTP method
+              
+                // set the XHR headers to indicate that we are sending form data
+                xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+                
+                // handle the response from the server
+                xhr.addEventListener('load', () => {  
+                  console.log(xhr.responseText);
+                });
+              
+                xhr.send(formData); // send the FormData object to the server
+            }); 
+          </script>-->
     </body>
 </html>

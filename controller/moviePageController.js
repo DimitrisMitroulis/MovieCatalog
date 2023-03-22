@@ -20,8 +20,19 @@ const bcrypt = require('bcrypt');
 //console.log(cr.randomBytes(64).toString('hex'));
 const fetch = require("node-fetch");
 
+const multer = require("multer");
 
-
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/') 
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname) 
+    }
+  });
+  
+  // Create multer middleware instance
+  const upload = multer({ storage: storage });
 
 
 const flash = require('express-flash');
@@ -200,9 +211,6 @@ module.exports = function(app){
         res.render('error-page',{st:""});
 
     });
-
-   
-
 
     app.get("/search", async (req, res) => {
         try {
@@ -431,19 +439,19 @@ module.exports = function(app){
         res.render('create-movie');
     });
 
-    app.post('/create-movie',(req, res) => {
+    app.post('/create-movie',upload.single('image'),(req, res) => {
         //var id = req.body.movie_id;
         var nowPlaying = (req.body.nowPlaying)? true:false;
-        var actors = req.body.actors
         //console.log(req.body.genre);
-        //console.log(req.body.genre);
+        console.log(req.body);
+        //req.body.actors.split(','),
 
         const m = new movieSchema({
             title : req.body.title,
             year : req.body.year,
             genres : req.body.genre,
             director : req.body.director,
-            actors : actors.split(','),
+            actors : "asd",
             plot : req.body.plot,
             poster : '1RRWazcUGOxLhGYu9pMC82viWm6nxZ5xO',
             rating : req.body.rating,
@@ -451,19 +459,20 @@ module.exports = function(app){
             nowPlaying: nowPlaying
         });
 
-        try{
-            movieSchema(m).save(function(err,data){
-                if (err) {
-                    res.render('error-page',{st:err});
+
+        // try{
+        //     movieSchema(m).save(function(err,data){
+        //         if (err) {
+        //             res.render('error-page',{st:err});
                     
-                }
-                res.redirect('/profile');
-            });
+        //         }
+        //         res.redirect('/profile');
+        //     });
 
      
-        }catch(e){
-            res.render('error-page',{st:e});
-        }
+        // }catch(e){
+        //     res.render('error-page',{st:e});
+        // }
     
     
     
